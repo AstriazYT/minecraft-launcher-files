@@ -7,6 +7,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 900,
     height: 600,
+    frame: false, // Fenêtre sans bordure style client moderne
     webPreferences: { 
       nodeIntegration: true, 
       contextIsolation: false 
@@ -21,15 +22,15 @@ app.whenReady().then(() => {
 
   ipcMain.on('launch-game', async () => {
     try {
-      win.webContents.send('status', 'Récupération de la configuration...');
+      win.webContents.send('status', { text: 'Récupération de la configuration...', percent: 0 });
+      
       const response = await axios.get('https://astriaz.github.io/minecraft-launcher-files/versions/1.20.4/config.json');
       const remoteConfig = response.data;
 
-      win.webContents.send('status', 'Connexion Microsoft...');
-      // Authentification Microsoft officielle
+      win.webContents.send('status', { text: 'Connexion Microsoft...', percent: 10 });
       const auth = await Authenticator.getAuth("microsoft");
 
-      win.webContents.send('status', 'Préparation du lancement...');
+      win.webContents.send('status', { text: 'Préparation du lancement...', percent: 20 });
       const launcher = new Client();
       
       const opts = {
@@ -50,7 +51,10 @@ app.whenReady().then(() => {
       };
 
       launcher.on('progress', (e) => {
-        win.webContents.send('status', `Téléchargement : ${Math.round(e.percent)}%`);
+        win.webContents.send('status', {
+          text: 'Téléchargement des fichiers du jeu...',
+          percent: e.percent
+        });
       });
 
       launcher.on('data', (e) => {
@@ -58,11 +62,11 @@ app.whenReady().then(() => {
       });
 
       await launcher.launch(opts);
-      win.webContents.send('status', 'Jeu lancé !');
+      win.webContents.send('status', { text: 'Jeu lancé avec succès !', percent: 100 });
 
     } catch (error) {
       console.error(error);
-      win.webContents.send('status', 'Erreur lors du lancement.');
+      win.webContents.send('status', { text: 'Erreur lors du lancement.', percent: 0 });
     }
   });
 });
