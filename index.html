@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radiant - Launcher</title>
+    <title>Radiant Launcher</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,119 +16,104 @@
         body {
             width: 100vw;
             height: 100vh;
-            background: #0d0e15;
+            background: #0b0c10;
             color: #ffffff;
             display: flex;
-            overflow: hidden;
-            -webkit-app-region: drag;
-        }
-
-        /* Menu latéral ultra épuré */
-        .side-menu {
-            width: 80px;
-            background: rgba(0, 0, 0, 0.4);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
             flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            padding: 25px 0;
+            padding: 30px;
+            overflow: hidden;
+            -webkit-app-region: drag; /* Permet de déplacer la fenêtre sans bordure */
         }
 
-        /* Logo épuré style minimaliste */
-        .brand-logo {
-            font-size: 22px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            color: #ff416c;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-        }
-
-        .menu-icon {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            margin-bottom: 15px;
+        /* Boutons de la barre de titre Windows (fermer / réduire) en haut à droite */
+        .window-controls {
+            position: absolute;
+            top: 15px;
+            right: 20px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.4);
-            transition: background 0.2s, color 0.2s;
+            gap: 12px;
             -webkit-app-region: no-drag;
+        }
+
+        .win-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 16px;
             cursor: pointer;
+            transition: color 0.2s;
         }
 
-        .menu-icon:hover, .menu-icon.active {
-            background: rgba(255, 65, 108, 0.15);
-            color: #ff416c;
+        .win-btn:hover {
+            color: #ffffff;
         }
 
-        /* Zone principale */
-        .main-content {
+        /* Centre : Le grand Logo minimaliste (style Paladium) */
+        .center-container {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            position: relative;
-            padding: 40px;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
-        /* Fond immersif Survie */
-        .hero-section {
+        .logo-box {
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Effet de lueur derrière le logo */
+        .logo-box::after {
+            content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0d0e15 0%, #1a1c29 100%);
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff4b2b, #ff416c);
+            filter: blur(40px);
+            opacity: 0.3;
             z-index: -1;
         }
 
-        /* Panneau central / Titre */
-        .server-hero-info {
-            margin-bottom: 40px;
-        }
-
-        .server-title {
-            font-size: 56px;
+        .logo-text {
+            font-size: 80px;
             font-weight: 900;
-            letter-spacing: 4px;
-            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            margin-bottom: 8px;
+            letter-spacing: -2px;
         }
 
-        .server-subtitle {
-            font-size: 15px;
-            color: #8b90a0;
-            letter-spacing: 1.5px;
+        .server-name {
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
         }
 
-        /* Panneau de lancement */
-        .action-box {
-            background: rgba(13, 14, 21, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 25px;
+        /* Bas de page : Statut, Barre de progression et Bouton Jouer */
+        .bottom-container {
+            width: 100%;
+            max-width: 450px;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-width: 600px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            align-items: center;
+            -webkit-app-region: no-drag;
         }
 
-        .status-container {
+        .status-info {
+            width: 100%;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            color: #8b90a0;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         #status-text {
@@ -142,9 +127,9 @@
 
         .progress-bar-bg {
             width: 100%;
-            height: 6px;
+            height: 4px;
             background: rgba(255, 255, 255, 0.08);
-            border-radius: 3px;
+            border-radius: 2px;
             overflow: hidden;
         }
 
@@ -152,30 +137,28 @@
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #ff4b2b, #ff416c);
-            border-radius: 3px;
             transition: width 0.3s ease;
         }
 
         .btn-launch {
             width: 100%;
-            height: 50px;
+            height: 48px;
             background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             color: #ffffff;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 65, 108, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            -webkit-app-region: no-drag;
+            box-shadow: 0 4px 20px rgba(255, 65, 108, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
         }
 
         .btn-launch:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 65, 108, 0.45);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(255, 65, 108, 0.5);
         }
 
         .btn-launch:active {
@@ -188,38 +171,52 @@
             transform: none;
             box-shadow: none;
         }
+
+        /* Lien discret en bas comme sur le screen de Paladium */
+        .help-link {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+            margin-top: 5px;
+        }
+
+        .help-link:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Menu latéral épuré -->
-    <div class="side-menu">
-        <div class="brand-logo">R</div>
-        <div class="menu-icon active" title="Accueil">🏠</div>
-        <div class="menu-icon" title="Paramètres">⚙️</div>
+    <!-- Contrôles de fenêtre (Fermer) -->
+    <div class="window-controls">
+        <button class="win-btn" id="close-btn">✕</button>
     </div>
 
-    <!-- Zone principale -->
-    <div class="main-content">
-        <div class="hero-section"></div>
+    <!-- Centre avec le gros logo minimaliste Radiant -->
+    <div class="center-container">
+        <div class="logo-box">
+            <span class="logo-text">R</span>
+        </div>
+        <div class="server-name">Radiant Survie</div>
+    </div>
 
-        <div class="server-hero-info">
-            <h1 class="server-title">Radiant</h1>
-            <p class="server-subtitle">Serveur Survie Multijoueur</p>
+    <!-- Bas de page : chargement et lancement -->
+    <div class="bottom-container">
+        <div class="status-info">
+            <span id="status-text">Prêt à lancer</span>
+            <span id="percent-text"></span>
         </div>
 
-        <div class="action-box">
-            <div class="status-container">
-                <span id="status-text">Prêt à jouer</span>
-                <span id="percent-text"></span>
-            </div>
-
-            <div class="progress-bar-bg">
-                <div id="progress-fill" class="progress-bar-fill"></div>
-            </div>
-
-            <button id="play-btn" class="btn-launch">JOUER</button>
+        <div class="progress-bar-bg">
+            <div id="progress-fill" class="progress-bar-fill"></div>
         </div>
+
+        <button id="play-btn" class="btn-launch">JOUER</button>
+        
+        <a href="#" class="help-link" id="help-link">Problème lors de la connexion ?</a>
     </div>
 
     <script>
@@ -229,10 +226,15 @@
         const statusText = document.getElementById('status-text');
         const percentText = document.getElementById('percent-text');
         const progressFill = document.getElementById('progress-fill');
+        const closeBtn = document.getElementById('close-btn');
+
+        closeBtn.addEventListener('click', () => {
+            window.close();
+        });
 
         playBtn.addEventListener('click', () => {
             playBtn.disabled = true;
-            playBtn.innerText = 'LANCEMENT...';
+            playBtn.innerText = 'CONNEXION...';
             statusText.innerText = 'Initialisation...';
             percentText.innerText = '0%';
             progressFill.style.width = '0%';
