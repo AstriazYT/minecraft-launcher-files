@@ -1,219 +1,243 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mon Server Launcher</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Launcher - Style Client Pro</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    body {
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(135deg, #0d0e15 0%, #1a1c29 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden;
-    }
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0d0e15 0%, #1a1c29 100%);
+            color: #ffffff;
+            display: flex;
+            overflow: hidden;
+            -webkit-app-region: drag; /* Permet de déplacer la fenêtre */
+        }
 
-    /* Barre de titre personnalisée */
-    .top-bar {
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      background: rgba(0, 0, 0, 0.2);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      -webkit-app-region: drag; /* Permet de déplacer la fenêtre */
-    }
+        /* Menu Latéral (style Paladium/Badlion) */
+        .side-menu {
+            width: 80px;
+            background: rgba(0, 0, 0, 0.25);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            -webkit-app-region: drag;
+        }
 
-    .top-bar .title {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
-    }
+        .menu-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.3);
+            transition: background 0.2s, color 0.2s;
+            -webkit-app-region: no-drag;
+            cursor: pointer;
+        }
 
-    /* Zone centrale / Hero */
-    .main-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      text-align: center;
-    }
+        .menu-icon:hover, .menu-icon.active {
+            background: rgba(255, 65, 108, 0.1);
+            color: #ff416c;
+        }
 
-    .server-brand {
-      margin-bottom: 30px;
-    }
+        /* Zone de contenu principale */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
 
-    .server-title {
-      font-size: 42px;
-      font-weight: 900;
-      letter-spacing: 3px;
-      background: linear-gradient(90deg, #ff4b2b, #ff416c);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-transform: uppercase;
-      text-shadow: 0 10px 20px rgba(255, 65, 108, 0.2);
-    }
+        /* Hero / Illustration (image_6.png pour l'ambiance) */
+        .hero-section {
+            flex: 1;
+            background-image: url('https://raw.githubusercontent.com/astriaz/minecraft-launcher-files/main/background.png');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) brightness(0.6) opacity(0.8);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
 
-    .server-subtitle {
-      font-size: 14px;
-      color: #a0a5ba;
-      margin-top: 5px;
-      letter-spacing: 1px;
-    }
+        /* Panneau de lancement (Glassmorphism) */
+        .action-panel {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(13, 14, 21, 0.95) 100%);
+        }
 
-    /* Zone d'action du bas */
-    .bottom-panel {
-      padding: 30px 40px;
-      background: rgba(13, 14, 21, 0.85);
-      backdrop-filter: blur(10px);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+        .action-panel h1 {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            text-shadow: 0 10px 20px rgba(255, 65, 108, 0.2);
+            margin-bottom: 10px;
+        }
 
-    .status-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      color: #8b90a0;
-    }
+        .action-panel p {
+            font-size: 14px;
+            color: #a0a5ba;
+            margin-bottom: 30px;
+        }
 
-    #status-text {
-      font-weight: 500;
-    }
+        /* Barre d'état et de progression */
+        .status-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #8b90a0;
+            margin-bottom: 15px;
+        }
 
-    #percent-text {
-      font-weight: 700;
-      color: #ff416c;
-    }
+        #status-text {
+            font-weight: 500;
+        }
 
-    /* Barre de progression */
-    .progress-bar-bg {
-      width: 100%;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
-      overflow: hidden;
-    }
+        #percent-text {
+            font-weight: 700;
+            color: #ff416c;
+        }
 
-    .progress-bar-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #ff4b2b, #ff416c);
-      border-radius: 4px;
-      transition: width 0.3s ease;
-    }
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
 
-    /* Bouton principal */
-    .btn-launch {
-      width: 100%;
-      height: 55px;
-      background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
-      border: none;
-      border-radius: 8px;
-      color: #ffffff;
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: 0 8px 25px rgba(255, 65, 108, 0.35);
-      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
-      -webkit-app-region: no-drag;
-    }
+        .progress-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #ff4b2b, #ff416c);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
 
-    .btn-launch:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(255, 65, 108, 0.5);
-    }
+        /* Bouton principal */
+        .btn-launch {
+            width: 100%;
+            height: 55px;
+            background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 65, 108, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            -webkit-app-region: no-drag;
+        }
 
-    .btn-launch:active {
-      transform: translateY(0);
-    }
+        .btn-launch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 65, 108, 0.5);
+        }
 
-    .btn-launch:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-  </style>
+        .btn-launch:active {
+            transform: translateY(0);
+        }
+
+        .btn-launch:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Barre supérieure de fenêtre -->
-  <div class="top-bar">
-    <span class="title">Official Server Launcher</span>
-  </div>
-
-  <!-- Zone centrale -->
-  <div class="main-container">
-    <div class="server-brand">
-      <h1 class="server-title">MON SERVEUR</h1>
-      <p class="server-subtitle">Rejoins la communauté en un clic</p>
-    </div>
-  </div>
-
-  <!-- Panneau de lancement du bas -->
-  <div class="bottom-panel">
-    <div class="status-container">
-      <span id="status-text">Prêt à jouer</span>
-      <span id="percent-text"></span>
+    <!-- Menu Latéral -->
+    <div class="side-menu">
+        <div class="menu-icon active">🏠</div> <!-- Accueil -->
+        <div class="menu-icon">⚔️</div> <!-- Factions -->
+        <div class="menu-icon">🛒</div> <!-- Boutique -->
+        <div class="menu-icon">⚙️</div> <!-- Paramètres -->
     </div>
 
-    <div class="progress-bar-bg">
-      <div id="progress-fill" class="progress-bar-fill"></div>
+    <!-- Zone Principale -->
+    <div class="main-content">
+        <div class="hero-section"></div> <!-- Image d'ambiance de fond -->
+
+        <div class="action-panel">
+            <h1>MON SERVEUR</h1>
+            <p>Rejoins la communauté en un clic</p>
+
+            <div class="status-container">
+                <span id="status-text">Prêt à jouer</span>
+                <span id="percent-text"></span>
+            </div>
+
+            <div class="progress-bar-bg">
+                <div id="progress-fill" class="progress-bar-fill"></div>
+            </div>
+
+            <button id="play-btn" class="btn-launch">JOUER</button>
+        </div>
     </div>
 
-    <button id="play-btn" class="btn-launch">JOUER</button>
-  </div>
+    <script>
+        const { ipcRenderer } = require('electron');
 
-  <script>
-    const { ipcRenderer } = require('electron');
+        const playBtn = document.getElementById('play-btn');
+        const statusText = document.getElementById('status-text');
+        const percentText = document.getElementById('percent-text');
+        const progressFill = document.getElementById('progress-fill');
 
-    const playBtn = document.getElementById('play-btn');
-    const statusText = document.getElementById('status-text');
-    const percentText = document.getElementById('percent-text');
-    const progressFill = document.getElementById('progress-fill');
+        playBtn.addEventListener('click', () => {
+            playBtn.disabled = true;
+            playBtn.innerText = 'LANCEMENT...';
+            statusText.innerText = 'Initialisation...';
+            percentText.innerText = '0%';
+            progressFill.style.width = '0%';
+            ipcRenderer.send('launch-game');
+        });
 
-    playBtn.addEventListener('click', () => {
-      playBtn.disabled = true;
-      playBtn.innerText = 'LANCEMENT...';
-      statusText.innerText = 'Initialisation...';
-      ipcRenderer.send('launch-game');
-    });
-
-    // Écoute des mises à jour transmises par main.js
-    ipcRenderer.on('status', (event, data) => {
-      if (typeof data === 'string') {
-        statusText.innerText = data;
-      } else if (typeof data === 'object') {
-        if (data.text) statusText.innerText = data.text;
-        if (data.percent !== undefined) {
-          progressFill.style.width = data.percent + '%';
-          percentText.innerText = Math.round(data.percent) + '%';
-        }
-      }
-    });
-  </script>
-
+        ipcRenderer.on('status', (event, data) => {
+            if (typeof data === 'string') {
+                statusText.innerText = data;
+            } else if (typeof data === 'object') {
+                if (data.text) statusText.innerText = data.text;
+                if (data.percent !== undefined) {
+                    progressFill.style.width = data.percent + '%';
+                    percentText.innerText = Math.round(data.percent) + '%';
+                }
+            }
+        });
+    </script>
 </body>
 </html>
