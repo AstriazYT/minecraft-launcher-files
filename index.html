@@ -1,64 +1,219 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Mon Launcher Minecraft</title>
-    <style>
-        body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        h1 {
-            margin-bottom: 10px;
-        }
-        #status {
-            color: #888888;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Server Launcher</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, #0d0e15 0%, #1a1c29 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* Barre de titre personnalisée */
+    .top-bar {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      -webkit-app-region: drag; /* Permet de déplacer la fenêtre */
+    }
+
+    .top-bar .title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+    }
+
+    /* Zone centrale / Hero */
+    .main-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .server-brand {
+      margin-bottom: 30px;
+    }
+
+    .server-title {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      background: linear-gradient(90deg, #ff4b2b, #ff416c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      text-shadow: 0 10px 20px rgba(255, 65, 108, 0.2);
+    }
+
+    .server-subtitle {
+      font-size: 14px;
+      color: #a0a5ba;
+      margin-top: 5px;
+      letter-spacing: 1px;
+    }
+
+    /* Zone d'action du bas */
+    .bottom-panel {
+      padding: 30px 40px;
+      background: rgba(13, 14, 21, 0.85);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .status-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #8b90a0;
+    }
+
+    #status-text {
+      font-weight: 500;
+    }
+
+    #percent-text {
+      font-weight: 700;
+      color: #ff416c;
+    }
+
+    /* Barre de progression */
+    .progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff4b2b, #ff416c);
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    /* Bouton principal */
+    .btn-launch {
+      width: 100%;
+      height: 55px;
+      background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
+      border: none;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255, 65, 108, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+      -webkit-app-region: no-drag;
+    }
+
+    .btn-launch:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(255, 65, 108, 0.5);
+    }
+
+    .btn-launch:active {
+      transform: translateY(0);
+    }
+
+    .btn-launch:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>Mon Serveur Minecraft</h1>
-    <div id="status">Prêt à lancer</div>
-    <button id="play-btn">JOUER</button>
+  <!-- Barre supérieure de fenêtre -->
+  <div class="top-bar">
+    <span class="title">Official Server Launcher</span>
+  </div>
 
-    <script>
-        const { ipcRenderer } = require('electron');
+  <!-- Zone centrale -->
+  <div class="main-container">
+    <div class="server-brand">
+      <h1 class="server-title">MON SERVEUR</h1>
+      <p class="server-subtitle">Rejoins la communauté en un clic</p>
+    </div>
+  </div>
 
-        // Quand on clique sur le bouton "JOUER"
-        document.getElementById('play-btn').addEventListener('click', () => {
-            document.getElementById('play-btn').disabled = true;
-            ipcRenderer.send('launch-game');
-        });
+  <!-- Panneau de lancement du bas -->
+  <div class="bottom-panel">
+    <div class="status-container">
+      <span id="status-text">Prêt à jouer</span>
+      <span id="percent-text"></span>
+    </div>
 
-        // Écoute des messages de statut envoyés par le main.js
-        ipcRenderer.on('status', (event, text) => {
-            document.getElementById('status').innerText = text;
-        });
-    </script>
+    <div class="progress-bar-bg">
+      <div id="progress-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <button id="play-btn" class="btn-launch">JOUER</button>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+
+    const playBtn = document.getElementById('play-btn');
+    const statusText = document.getElementById('status-text');
+    const percentText = document.getElementById('percent-text');
+    const progressFill = document.getElementById('progress-fill');
+
+    playBtn.addEventListener('click', () => {
+      playBtn.disabled = true;
+      playBtn.innerText = 'LANCEMENT...';
+      statusText.innerText = 'Initialisation...';
+      ipcRenderer.send('launch-game');
+    });
+
+    // Écoute des mises à jour transmises par main.js
+    ipcRenderer.on('status', (event, data) => {
+      if (typeof data === 'string') {
+        statusText.innerText = data;
+      } else if (typeof data === 'object') {
+        if (data.text) statusText.innerText = data.text;
+        if (data.percent !== undefined) {
+          progressFill.style.width = data.percent + '%';
+          percentText.innerText = Math.round(data.percent) + '%';
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>
