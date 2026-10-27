@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Launcher Minecraft</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        #status {
+            color: #888888;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mon Serveur Minecraft</h1>
+    <div id="status">Prêt à lancer</div>
+    <button id="play-btn">JOUER</button>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Quand on clique sur le bouton "JOUER"
+        document.getElementById('play-btn').addEventListener('click', () => {
+            document.getElementById('play-btn').disabled = true;
+            ipcRenderer.send('launch-game');
+        });
+
+        // Écoute des messages de statut envoyés par le main.js
+        ipcRenderer.on('status', (event, text) => {
+            document.getElementById('status').innerText = text;
+        });
+    </script>
+
+</body>
+</html>
