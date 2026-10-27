@@ -24,10 +24,9 @@
             align-items: center;
             padding: 30px;
             overflow: hidden;
-            -webkit-app-region: drag; /* Permet de déplacer la fenêtre sans bordure */
+            -webkit-app-region: drag;
         }
 
-        /* Boutons de la barre de titre Windows (fermer / réduire) en haut à droite */
         .window-controls {
             position: absolute;
             top: 15px;
@@ -50,7 +49,6 @@
             color: #ffffff;
         }
 
-        /* Centre : Le grand Logo minimaliste (style Paladium) */
         .center-container {
             flex: 1;
             display: flex;
@@ -69,7 +67,6 @@
             position: relative;
         }
 
-        /* Effet de lueur derrière le logo */
         .logo-box::after {
             content: '';
             position: absolute;
@@ -97,7 +94,6 @@
             text-transform: uppercase;
         }
 
-        /* Bas de page : Statut, Barre de progression et Bouton Jouer */
         .bottom-container {
             width: 100%;
             max-width: 450px;
@@ -140,7 +136,7 @@
             transition: width 0.3s ease;
         }
 
-        .btn-launch {
+        .btn-action {
             width: 100%;
             height: 48px;
             background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
@@ -156,23 +152,18 @@
             transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
         }
 
-        .btn-launch:hover {
+        .btn-action:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 25px rgba(255, 65, 108, 0.5);
         }
 
-        .btn-launch:active {
-            transform: translateY(0);
-        }
-
-        .btn-launch:disabled {
+        .btn-action:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        /* Lien discret en bas comme sur le screen de Paladium */
         .help-link {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.3);
@@ -190,23 +181,20 @@
 </head>
 <body>
 
-    <!-- Contrôles de fenêtre (Fermer) -->
     <div class="window-controls">
         <button class="win-btn" id="close-btn">✕</button>
     </div>
 
-    <!-- Centre avec le gros logo minimaliste Radiant -->
     <div class="center-container">
         <div class="logo-box">
             <span class="logo-text">R</span>
         </div>
-        <div class="server-name">Radiant Survie</div>
+        <div class="server-name" id="user-display">Radiant Survie</div>
     </div>
 
-    <!-- Bas de page : chargement et lancement -->
     <div class="bottom-container">
         <div class="status-info">
-            <span id="status-text">Prêt à lancer</span>
+            <span id="status-text">En attente de connexion...</span>
             <span id="percent-text"></span>
         </div>
 
@@ -214,33 +202,54 @@
             <div id="progress-fill" class="progress-bar-fill"></div>
         </div>
 
-        <button id="play-btn" class="btn-launch">JOUER</button>
+        <!-- Au début, le bouton sert à se connecter Microsoft -->
+        <button id="main-btn" class="btn-action">SE CONNECTER (MICROSOFT)</button>
         
-        <a href="#" class="help-link" id="help-link">Problème lors de la connexion ?</a>
+        <a href="#" class="help-link">Problème lors de la connexion ?</a>
     </div>
 
     <script>
         const { ipcRenderer } = require('electron');
 
-        const playBtn = document.getElementById('play-btn');
+        const mainBtn = document.getElementById('main-btn');
         const statusText = document.getElementById('status-text');
         const percentText = document.getElementById('percent-text');
         const progressFill = document.getElementById('progress-fill');
+        const userDisplay = document.getElementById('user-display');
         const closeBtn = document.getElementById('close-btn');
+
+        let currentState = 'LOGIN'; // 'LOGIN' puis 'PLAY'
 
         closeBtn.addEventListener('click', () => {
             window.close();
         });
 
-        playBtn.addEventListener('click', () => {
-            playBtn.disabled = true;
-            playBtn.innerText = 'CONNEXION...';
-            statusText.innerText = 'Initialisation...';
-            percentText.innerText = '0%';
-            progressFill.style.width = '0%';
-            ipcRenderer.send('launch-game');
+        mainBtn.addEventListener('click', () => {
+            if (currentState === 'LOGIN') {
+                mainBtn.disabled = true;
+                mainBtn.innerText = 'CONNEXION EN COURS...';
+                statusText.innerText = 'Ouverture de la fenêtre Microsoft...';
+                ipcRenderer.send('microsoft-login');
+            } else if (currentState === 'PLAY') {
+                mainBtn.disabled = true;
+                mainBtn.innerText = 'LANCEMENT...';
+                statusText.innerText = 'Préparation du jeu...';
+                percentText.innerText = '0%';
+                progressFill.style.width = '0%';
+                ipcRenderer.send('launch-game');
+            }
         });
 
+        // Quand la connexion Microsoft est réussie
+        ipcRenderer.on('login-success', (event, username) => {
+            currentState = 'PLAY';
+            userDisplay.innerText = `Connecté : ${username}`;
+            statusText.innerText = 'Prêt à jouer';
+            mainBtn.disabled = false;
+            mainBtn.innerText = 'JOUER';
+        });
+
+        // Suivi de la progression du lancement du jeu
         ipcRenderer.on('status', (event, data) => {
             if (typeof data === 'string') {
                 statusText.innerText = data;
