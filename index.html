@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Launcher - Style Client Pro</title>
+    <title>Radiant - Launcher</title>
     <style>
         * {
             box-sizing: border-box;
@@ -16,106 +16,119 @@
         body {
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, #0d0e15 0%, #1a1c29 100%);
+            background: #0d0e15;
             color: #ffffff;
             display: flex;
             overflow: hidden;
-            -webkit-app-region: drag; /* Permet de déplacer la fenêtre */
+            -webkit-app-region: drag;
         }
 
-        /* Menu Latéral (style Paladium/Badlion) */
+        /* Menu latéral ultra épuré */
         .side-menu {
             width: 80px;
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.4);
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 0;
-            -webkit-app-region: drag;
+            padding: 25px 0;
+        }
+
+        /* Logo épuré style minimaliste */
+        .brand-logo {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #ff416c;
+            margin-bottom: 40px;
+            text-transform: uppercase;
         }
 
         .menu-icon {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.4);
             transition: background 0.2s, color 0.2s;
             -webkit-app-region: no-drag;
             cursor: pointer;
         }
 
         .menu-icon:hover, .menu-icon.active {
-            background: rgba(255, 65, 108, 0.1);
+            background: rgba(255, 65, 108, 0.15);
             color: #ff416c;
         }
 
-        /* Zone de contenu principale */
+        /* Zone principale */
         .main-content {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-end;
             position: relative;
+            padding: 40px;
         }
 
-        /* Hero / Illustration (image_6.png pour l'ambiance) */
+        /* Fond immersif Survie */
         .hero-section {
-            flex: 1;
-            background-image: url('https://raw.githubusercontent.com/astriaz/minecraft-launcher-files/main/background.png');
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(100%) brightness(0.6) opacity(0.8);
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: linear-gradient(135deg, #0d0e15 0%, #1a1c29 100%);
             z-index: -1;
         }
 
-        /* Panneau de lancement (Glassmorphism) */
-        .action-panel {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(13, 14, 21, 0.95) 100%);
+        /* Panneau central / Titre */
+        .server-hero-info {
+            margin-bottom: 40px;
         }
 
-        .action-panel h1 {
-            font-size: 42px;
+        .server-title {
+            font-size: 56px;
             font-weight: 900;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
             background: linear-gradient(90deg, #ff4b2b, #ff416c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            text-shadow: 0 10px 20px rgba(255, 65, 108, 0.2);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
-        .action-panel p {
-            font-size: 14px;
-            color: #a0a5ba;
-            margin-bottom: 30px;
+        .server-subtitle {
+            font-size: 15px;
+            color: #8b90a0;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
 
-        /* Barre d'état et de progression */
+        /* Panneau de lancement */
+        .action-box {
+            background: rgba(13, 14, 21, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 600px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
         .status-container {
-            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 13px;
             color: #8b90a0;
-            margin-bottom: 15px;
         }
 
         #status-text {
@@ -129,42 +142,40 @@
 
         .progress-bar-bg {
             width: 100%;
-            height: 8px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.08);
-            border-radius: 4px;
+            border-radius: 3px;
             overflow: hidden;
-            margin-bottom: 25px;
         }
 
         .progress-bar-fill {
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #ff4b2b, #ff416c);
-            border-radius: 4px;
+            border-radius: 3px;
             transition: width 0.3s ease;
         }
 
-        /* Bouton principal */
         .btn-launch {
             width: 100%;
-            height: 55px;
+            height: 50px;
             background: linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%);
             border: none;
             border-radius: 8px;
             color: #ffffff;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
             letter-spacing: 2px;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 0 8px 25px rgba(255, 65, 108, 0.35);
-            transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+            box-shadow: 0 6px 20px rgba(255, 65, 108, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
             -webkit-app-region: no-drag;
         }
 
         .btn-launch:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(255, 65, 108, 0.5);
+            box-shadow: 0 10px 25px rgba(255, 65, 108, 0.45);
         }
 
         .btn-launch:active {
@@ -181,22 +192,23 @@
 </head>
 <body>
 
-    <!-- Menu Latéral -->
+    <!-- Menu latéral épuré -->
     <div class="side-menu">
-        <div class="menu-icon active">🏠</div> <!-- Accueil -->
-        <div class="menu-icon">⚔️</div> <!-- Factions -->
-        <div class="menu-icon">🛒</div> <!-- Boutique -->
-        <div class="menu-icon">⚙️</div> <!-- Paramètres -->
+        <div class="brand-logo">R</div>
+        <div class="menu-icon active" title="Accueil">🏠</div>
+        <div class="menu-icon" title="Paramètres">⚙️</div>
     </div>
 
-    <!-- Zone Principale -->
+    <!-- Zone principale -->
     <div class="main-content">
-        <div class="hero-section"></div> <!-- Image d'ambiance de fond -->
+        <div class="hero-section"></div>
 
-        <div class="action-panel">
-            <h1>MON SERVEUR</h1>
-            <p>Rejoins la communauté en un clic</p>
+        <div class="server-hero-info">
+            <h1 class="server-title">Radiant</h1>
+            <p class="server-subtitle">Serveur Survie Multijoueur</p>
+        </div>
 
+        <div class="action-box">
             <div class="status-container">
                 <span id="status-text">Prêt à jouer</span>
                 <span id="percent-text"></span>
