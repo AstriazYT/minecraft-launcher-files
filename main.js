@@ -62,7 +62,7 @@ app.whenReady().then(() => {
       });
 
       await launcher.launch(opts);
-      win.webContents.send('status', { text: 'Jeu lancé avec succès !', percent: 100 });
+      win.webContents.send('status', { text: 'Jeu lancé !', percent: 100 });
 
     } catch (error) {
       console.error(error);
