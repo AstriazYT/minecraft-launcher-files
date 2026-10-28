@@ -1,9 +1,10 @@
 {
-  "latestVersion": "1.20.4",
-  "gameVersion": "1.20.4",
-  "loader": "forge",
-  "loaderVersion": "49.0.3",
-  "serverAddress": "servie-1.felixsrv.me",
-  "filesUrl": "https://astriaz.github.io/minecraft-launcher-files/versions/1.20.4/",
-  "files": []
+  "gameVersion": "1.20.1",
+  "forgeVersionPath": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.3.0/forge-1.20.1-47.3.0-installer.jar",
+  "mods": [
+    {
+      "name": "Geyser-NeoForge",
+      "downloadUrl": "https://astriaz.github.io/minecraft-launcher-files/mods/Geyser-NeoForge.jar"
+    }
+  ]
 }
